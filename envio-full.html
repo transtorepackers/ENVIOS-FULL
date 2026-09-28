@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Envio FULL – Transtore</title>
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<style>
+:root{
+  --red:#ee4339;--red-dark:#d3271e;--red-tint:#fdeceb;
+  --bg:#f7f4f3;--card:#fff;--border:#ece3e2;--text:#1a1a1a;--muted:#6b6b6b;
+  --ml:#ffe600;--ml-ink:#2d3277;--ml-tint:#fffbd1;
+  --shp:#ee4d2d;--shp-tint:#fdebe6;
+  --s-agu:#a15c07;--s-agu-bg:#fdf2dc;
+  --s-pro:#1d4ed8;--s-pro-bg:#e6eefc;
+  --s-doc:#0f766e;--s-doc-bg:#dff3ef;
+  --s-col:#15803d;--s-col-bg:#e3f4e8;
+  --s-can:#6b6b6b;--s-can-bg:#eeeaea;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.45}
+button{font:inherit;cursor:pointer}
+button:disabled{cursor:not-allowed;opacity:.55}
+:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+a{color:inherit}
+
+/* Topbar */
+.tst-topbar{position:sticky;top:0;z-index:40;background:#fff;border-bottom:1px solid var(--border)}
+.tst-topbar .in{max-width:1120px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{text-decoration:none;color:var(--text)}
+.logo img{height:30px;display:block}
+.logo-txt{font-weight:900;font-size:22px;letter-spacing:.05em;display:none}
+.logo-txt span{color:var(--red)}
+.btn-voltar{background:var(--red);color:#fff;border:0;border-radius:999px;padding:8px 16px;font-weight:700;text-decoration:none;font-size:14px}
+.btn-voltar:hover{background:var(--red-dark)}
+
+main{max-width:1120px;margin:0 auto;padding:22px 20px 32px}
+.hero{text-align:center;margin:6px 0 22px}
+.hero h1{margin:0;font-size:30px;letter-spacing:-.01em}
+.hero p{color:var(--muted);margin:6px 0 0}
+.modo-est{display:inline-block;margin-top:10px;background:var(--text);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:700}
+
+/* Toolbar */
+.toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.seg{display:inline-flex;background:#fff;border:1px solid var(--border);border-radius:999px;padding:4px;gap:2px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:8px 14px;font-weight:600;color:var(--muted);display:inline-flex;align-items:center;gap:7px}
+.seg button.on{background:var(--text);color:#fff}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.dot.ml{background:var(--ml);box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+.dot.shp{background:var(--shp)}
+.tb-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.conexao{font-size:13px;color:var(--muted)}
+.conexao.off{color:var(--red-dark);font-weight:600}
+.btn-red{background:var(--red);color:#fff;border:0;border-radius:999px;padding:10px 18px;font-weight:700}
+.btn-red:hover:not(:disabled){background:var(--red-dark)}
+.btn-sec{background:#fff;color:var(--text);border:1px solid var(--border);border-radius:999px;padding:9px 16px;font-weight:600}
+.btn-sec:hover:not(:disabled){border-color:#d6c9c8}
+.btn-link{background:none;border:0;color:var(--muted);text-decoration:underline;padding:6px 4px;font-size:14px}
+.btn-link:hover{color:var(--red-dark)}
+
+/* Pipeline */
+.pipe{list-style:none;margin:0 0 8px;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.pipe li{position:relative}
+.pipe li+li{border-left:1px solid var(--border)}
+.pipe button{width:100%;border:0;background:transparent;text-align:left;padding:14px 16px 13px;display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:10px;align-items:center}
+.pipe button:hover{background:#fbf8f8}
+.pipe .num{grid-row:1/3;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--bg);color:var(--muted)}
+.pipe .nome{font-size:13px;color:var(--muted);font-weight:600}
+.pipe .cont{font-size:24px;font-weight:800;line-height:1.1}
+.pipe li.sel button{background:var(--red-tint)}
+.pipe li.sel .num{background:var(--red);color:#fff}
+.pipe li.sel::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--red)}
+.pipe-hint{font-size:13px;color:var(--muted);margin:0 0 6px;min-height:20px}
+
+.sec-label{font-size:18px;font-weight:700;margin:26px 0 4px;padding-bottom:6px;position:relative}
+.sec-label::after{content:"";position:absolute;left:0;bottom:0;width:36px;height:3px;border-radius:2px;background:var(--red)}
+.sec-hint{margin:6px 0 14px;color:var(--muted);font-size:14px}
+
+/* Cards */
+.lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+.rem{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 16px 14px 20px;position:relative;display:flex;flex-direction:column;gap:10px}
+.rem::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;border-radius:14px 0 0 14px}
+.rem.ml::before{background:var(--ml)}
+.rem.shp::before{background:var(--shp)}
+.rem-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.rem-id{font-size:19px;font-weight:800}
+.tag-plat{display:inline-block;font-size:12px;font-weight:700;border-radius:6px;padding:2px 8px;margin-left:6px;vertical-align:3px}
+.tag-plat.ml{background:var(--ml);color:var(--ml-ink)}
+.tag-plat.shp{background:var(--shp);color:#fff}
+.st{font-size:12px;font-weight:700;border-radius:999px;padding:4px 10px;white-space:nowrap}
+.st.aguardando{background:var(--s-agu-bg);color:var(--s-agu)}
+.st.pronto{background:var(--s-pro-bg);color:var(--s-pro)}
+.st.documentado{background:var(--s-doc-bg);color:var(--s-doc)}
+.st.coletado{background:var(--s-col-bg);color:var(--s-col)}
+.st.cancelado{background:var(--s-can-bg);color:var(--s-can)}
+.coleta{font-size:15px}
+.quando{display:inline-block;font-size:12px;font-weight:700;border-radius:6px;padding:2px 7px;margin-left:6px;background:var(--bg);color:var(--muted)}
+.quando.amanha{background:var(--s-agu-bg);color:var(--s-agu)}
+.quando.hoje{background:var(--red);color:#fff}
+.quando.atraso{background:var(--text);color:#fff}
+.mini{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.mini i{height:5px;border-radius:3px;background:var(--border)}
+.mini i.on{background:var(--red)}
+.rem.cancelado .mini i{background:var(--s-can-bg)}
+.itens{width:100%;border-collapse:collapse;font-size:14px}
+.itens td{padding:4px 0;border-bottom:1px dashed var(--border)}
+.itens td:last-child{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.itens tr.tot td{border-bottom:0;padding-top:7px;font-size:15px}
+.vol{display:flex;gap:18px;font-size:14px;color:var(--muted)}
+.vol b{color:var(--text);font-size:16px}
+.docs{display:flex;flex-wrap:wrap;gap:6px}
+.doc{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:600;border:1px solid var(--border);border-radius:8px;padding:4px 9px;text-decoration:none;background:#fff}
+.doc:hover{border-color:var(--red);color:var(--red-dark)}
+.doc.falta{border-style:dashed;color:var(--muted);font-weight:500}
+.obs{font-size:14px;background:var(--bg);border-radius:8px;padding:7px 10px}
+.hist{font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 12px}
+.acoes{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:2px}
+.acoes .espera{font-size:14px;color:var(--muted)}
+.vazio{background:#fff;border:1px dashed #dccfce;border-radius:14px;padding:28px;text-align:center;color:var(--muted)}
+.vazio .btn-red{margin-top:12px}
+
+details.fech{margin-top:26px}
+details.fech summary{cursor:pointer;font-weight:700;font-size:16px;padding:10px 0;list-style:none}
+details.fech summary::-webkit-details-marker{display:none}
+details.fech summary::before{content:"▸ ";color:var(--red)}
+details.fech[open] summary::before{content:"▾ "}
+details.fech .lista{margin-top:8px}
+
+/* Modal */
+dialog{border:0;border-radius:16px;padding:0;width:min(560px,calc(100% - 24px));max-height:calc(100dvh - 32px);color:var(--text)}
+dialog::backdrop{background:rgba(26,26,26,.5)}
+.dlg{padding:22px 22px 18px;overflow:auto;max-height:calc(100dvh - 32px)}
+.dlg h3{margin:0 0 4px;font-size:21px}
+.dlg .dlg-sub{margin:0 0 16px;color:var(--muted);font-size:14px}
+.campo{margin-bottom:16px}
+.campo>label,.campo .lbl{display:block;font-weight:700;margin-bottom:6px}
+.campo small{display:block;color:var(--muted);font-size:12px;margin-top:5px}
+.opc{font-weight:400;color:var(--muted)}
+.campo input[type=date],.campo textarea,.campo input[type=number]{width:100%;border:1px solid #dccfce;border-radius:10px;padding:12px;font:inherit;background:#fff}
+.campo input[type=file]{width:100%;font-size:14px;padding:10px;border:1px dashed #d2c3c2;border-radius:10px;background:var(--bg)}
+.campo input:focus,.campo textarea:focus{border-color:var(--red);outline:none;box-shadow:0 0 0 3px var(--red-tint)}
+.plat-pick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pp{border:2px solid var(--border);background:#fff;border-radius:12px;padding:14px;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;gap:8px}
+.pp.on.ml{border-color:var(--ml-ink);background:var(--ml);color:var(--ml-ink)}
+.pp.on.shp{border-color:var(--shp);background:var(--shp);color:#fff}
+.qtds{display:grid;gap:8px}
+.qtd{display:grid;grid-template-columns:1fr 130px;align-items:center;gap:10px;background:var(--bg);border-radius:10px;padding:6px 6px 6px 12px}
+.qtd span{font-weight:600}
+.qtd input{font-size:20px!important;text-align:right;font-weight:700;padding:9px 12px!important}
+.total{margin-top:8px;text-align:right;font-size:15px}
+.total b{font-size:20px}
+.stepper{display:grid;grid-template-columns:64px 1fr 64px;gap:10px}
+.stepper button{border:1px solid var(--border);background:#fff;border-radius:12px;font-size:28px;font-weight:700}
+.stepper input{text-align:center;font-size:34px!important;font-weight:800;padding:12px!important}
+.resumo{background:var(--bg);border-radius:10px;padding:10px 12px;font-size:14px;margin-bottom:16px}
+.erro{background:var(--red-tint);color:var(--red-dark);border-radius:10px;padding:10px 12px;font-size:14px;font-weight:600;margin-bottom:14px}
+.dlg-acoes{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:14px;margin-top:4px}
+.dlg-acoes .btn-red,.dlg-acoes .btn-sec{padding:12px 20px}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--text);color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:60;max-width:calc(100% - 32px)}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.err{background:var(--red-dark)}
+
+.aviso-config{background:#fff;border:2px solid var(--red);border-radius:14px;padding:18px;margin-bottom:18px}
+.aviso-config code{background:var(--bg);padding:2px 6px;border-radius:5px}
+
+footer{max-width:1120px;margin:0 auto;padding:18px 20px 28px;text-align:center;color:var(--muted);font-size:12px}
+footer .ver{margin-bottom:6px}
+footer .sis{text-transform:uppercase;letter-spacing:.04em}
+footer a{color:var(--muted)}
+
+@media (max-width:720px){
+  .pipe{grid-template-columns:repeat(2,1fr)}
+  .pipe li:nth-child(3){border-left:0}
+  .pipe li:nth-child(n+3){border-top:1px solid var(--border)}
+  .hero h1{font-size:25px}
+  .lista{grid-template-columns:1fr}
+  .toolbar{flex-direction:column;align-items:stretch}
+  .seg{justify-content:space-between}
+  .tb-right{justify-content:space-between}
+}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+@media print{.tst-topbar{display:none!important}}
+</style>
+</head>
+<body>
+
+<div class="tst-topbar">
+  <div class="in">
+    <a class="logo" href="../index.html" aria-label="Transtore">
+      <img id="logoImg" src="../logo.png" alt="TRANSTORE" onerror="this.style.display='none';document.getElementById('logoTxt').style.display='block'">
+      <span class="logo-txt" id="logoTxt">TRAN<span>S</span>TORE</span>
+    </a>
+    <a class="btn-voltar" href="index.html">↩ Voltar</a>
+  </div>
+</div>
+
+<main>
+  <header class="hero">
+    <h1>Envio FULL</h1>
+    <p id="heroSub">Remessas de tapes para os centros de distribuição do Mercado Livre e da Shopee</p>
+    <span class="modo-est" id="modoEst" hidden>Tela do estoque</span>
+  </header>
+
+  <div id="avisoConfig" class="aviso-config" hidden>
+    <b>Falta ligar a página à planilha.</b> Abra este arquivo, procure <code>const API_URL</code> no início do script e cole a URL do Web App do Apps Script.
+  </div>
+
+  <div class="toolbar">
+    <div class="seg" role="group" aria-label="Plataforma">
+      <button type="button" data-plat="todas" class="on">Todas</button>
+      <button type="button" data-plat="ML"><i class="dot ml"></i>Mercado Livre</button>
+      <button type="button" data-plat="SHOPEE"><i class="dot shp"></i>Shopee</button>
+    </div>
+    <div class="tb-right">
+      <span class="conexao" id="conexao" aria-live="polite"></span>
+      <button type="button" class="btn-sec" id="btnAtualizar">Atualizar</button>
+      <button type="button" class="btn-red" id="btnNova">+ Nova remessa</button>
+    </div>
+  </div>
+
+  <ol class="pipe" id="pipe" aria-label="Etapas da remessa"></ol>
+  <p class="pipe-hint" id="pipeHint"></p>
+
+  <h2 class="sec-label" id="tituloAbertas">Em andamento</h2>
+  <p class="sec-hint">A coleta mais próxima aparece primeiro.</p>
+  <div id="listaAbertas" class="lista"></div>
+
+  <details class="fech" id="boxFechadas">
+    <summary>Coletadas e canceladas (<span id="nFechadas">0</span>)</summary>
+    <div id="listaFechadas" class="lista"></div>
+  </details>
+</main>
+
+<footer>
+  <div class="ver" id="versao"></div>
+  <div class="sis">SISTEMA INTERNO - T STORE INDUSTRIA DE ARTEFATOS PLÁSTICOS LTDA</div>
+</footer>
+
+<dialog id="dlg"><div class="dlg" id="dlgIn"></div></dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ============ CONFIGURAÇÃO ============ */
+const API_URL = 'COLE_AQUI_A_URL_DO_WEB_APP'; // termina em /exec
+const VERSAO = '1.1.0';
+const MODIFICADO = '28/09/2026 às 16:30';
+/* ====================================== */
+
+const MODO = new URLSearchParams(location.search).get('modo') === 'estoque' ? 'estoque' : 'admin';
+const API_OK = !!API_URL && !API_URL.startsWith('COLE_AQUI');
+let PRODUTOS = ['Tape 10cm - A', 'Tape 10cm - B', 'Tape 10cm - C', 'Tape 10cm - Preto', 'Tape 5cm - A'];
+const PLAT = { ML: { nome: 'Mercado Livre', cls: 'ml' }, SHOPEE: { nome: 'Shopee', cls: 'shp' } };
+const ETAPAS = [
+  { k: 'aguardando', nome: 'Aguardando separação', dica: 'O estoque está separando. Quando terminar, informa os volumes.' },
+  { k: 'pronto', nome: 'Pronto p/ coleta', dica: 'Separado e com volumes informados. Falta anexar NF e etiquetas dos volumes.' },
+  { k: 'documentado', nome: 'Documentação completa', dica: 'Tudo anexado. Falta confirmar a coleta.' },
+  { k: 'coletado', nome: 'Coletado', dica: 'Remessas já coletadas (as mais recentes).' }
+];
+const NOME_STATUS = { aguardando: 'Aguardando separação', pronto: 'Pronto p/ coleta', documentado: 'Documentação completa', coletado: 'Coletado', cancelado: 'Cancelado' };
+const ORDEM = { aguardando: 0, pronto: 1, documentado: 2, coletado: 3, cancelado: -1 };
+const MAX_MB = 15, MAX_TOTAL_MB = 35;
+const K_CACHE = 'envioFull.cache.v1', K_RASC = 'envioFull.rascunho.v1';
+
+const st = { remessas: [], plat: 'todas', status: null, ultima: null, offline: false, carregando: false, ocupado: false };
+
+/* ---------- utilidades ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const esperar = ms => new Promise(r => setTimeout(r, ms));
+function lsGet(k) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+function hojeISO() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function dataBR(iso) { if (!iso) return '—'; const p = String(iso).slice(0, 10).split('-'); return p[2] + '/' + p[1] + '/' + p[0]; }
+function dataHoraBR(s) { if (!s) return ''; const [d, h] = String(s).split(' '); const p = d.split('-'); return p[2] + '/' + p[1] + (h ? ' ' + h.slice(0, 5) : ''); }
+function diasAte(iso) { return Math.round((new Date(iso + 'T00:00:00') - new Date(hojeISO() + 'T00:00:00')) / 86400000); }
+function diaSemana(iso) { return ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'][new Date(iso + 'T00:00:00').getDay()]; }
+function horaAgora(d) { return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
+function novaChave() { return (crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-' + Math.random().toString(36).slice(2)); }
+function plural(n, s, p) { return n + ' ' + (n === 1 ? s : p); }
+
+function toast(msg, erro) {
+  const t = $('#toast'); t.textContent = msg; t.classList.toggle('err', !!erro); t.classList.add('on');
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('on'), erro ? 6000 : 3800);
+}
+
+/* ---------- comunicação com a planilha ---------- */
+async function apiListar() {
+  let erro;
+  for (let t = 0; t < 3; t++) {
+    try {
+      const resp = await fetch(API_URL + '?acao=listar&_=' + Date.now());
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      const d = await resp.json();
+      if (!d.ok) throw new Error(d.erro || 'Erro na planilha');
+      return d;
+    } catch (e) { erro = e; if (t < 2) await esperar(800 * 2 ** t); }
+  }
+  throw erro;
+}
+
+// POST sem Content-Type (vai como text/plain) para evitar bloqueio de CORS do Apps Script
+async function apiPost(payload, tentativas = 1) {
+  let erro;
+  for (let t = 0; t < tentativas; t++) {
+    try {
+      const resp = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      const d = await resp.json();
+      if (!d.ok) { const e = new Error(d.erro || 'Erro na planilha'); e.servidor = true; throw e; }
+      d._avisos = (d.avisos && d.avisos.length) ? dispararAvisos(d.avisos) : Promise.resolve(null);
+      return d;
+    } catch (e) {
+      if (e.servidor) throw e;
+      erro = e;
+      if (t < tentativas - 1) await esperar(1200 * 2 ** t);
+    }
+  }
+  throw new Error('Não foi possível falar com a planilha (' + erro.message + '). Confira a internet e tente de novo. Nada foi perdido nesta tela.');
+}
+
+/* ---------- avisos no Discord (saem do navegador) ---------- */
+async function postarAviso(a) {
+  const corpo = JSON.stringify(a.payload);
+  const tentar = () => fetch(a.url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: corpo, keepalive: corpo.length < 60000 });
+  try {
+    let resp = await tentar();
+    if (resp.status === 429) { await esperar(2500); resp = await tentar(); }
+    return resp.ok ? { ok: true } : { ok: false, erro: 'HTTP ' + resp.status };
+  } catch (e) {
+    // Rede/navegador bloqueou o formato JSON: tenta o formato de formulário
+    try {
+      const fd = new FormData(); fd.append('payload_json', corpo);
+      await fetch(a.url, { method: 'POST', mode: 'no-cors', body: fd });
+      return { ok: true };
+    } catch (e2) { return { ok: false, erro: e2.message || 'sem conexão' }; }
+  }
+}
+
+async function dispararAvisos(avisos) {
+  const falhas = [];
+  for (const a of avisos) {
+    const r = await postarAviso(a);
+    if (!r.ok) falhas.push({ plataforma: a.plataforma, payload: a.payload, erro: r.erro });
+  }
+  if (!falhas.length) return true;
+  try {
+    await apiPost({ acao: 'filaDiscord', avisos: falhas }, 3);
+    toast('O aviso do Discord não saiu agora. Ele será reenviado automaticamente em alguns minutos.', true);
+  } catch (e) {
+    toast('Não foi possível enviar o aviso do Discord. Avise a equipe manualmente.', true);
+  }
+  return false;
+}
+
+async function testarAviso(btn) {
+  if (!API_OK) return toast('Ligue a página à planilha primeiro (API_URL).', true);
+  btn.disabled = true; const txt = btn.textContent; btn.textContent = 'Testando…';
+  try {
+    const d = await apiPost({ acao: 'testeAviso' });
+    if (!d.avisos || !d.avisos.length) {
+      toast('O Apps Script não devolveu o aviso. Confira DISCORD_WEBHOOK_ML e se implantou uma nova versão.', true);
+    } else if (await d._avisos) {
+      toast('Teste enviado. Confira o canal do Discord.');
+    }
+  } catch (e) { toast(e.message, true); }
+  finally { btn.disabled = false; btn.textContent = txt; }
+}
+
+async function carregar(silencioso) {
+  if (!API_OK) { render(); return; }
+  if (st.carregando) return;
+  st.carregando = true;
+  if (!silencioso) setConexao('Carregando…');
+  try {
+    const d = await apiListar();
+    st.remessas = d.remessas || [];
+    if (Array.isArray(d.produtos) && d.produtos.length) PRODUTOS = d.produtos;
+    st.ultima = new Date(); st.offline = false;
+    lsSet(K_CACHE, { remessas: st.remessas, produtos: PRODUTOS, em: st.ultima.toISOString() });
+  } catch (e) {
+    st.offline = true;
+  } finally {
+    st.carregando = false;
+    setConexao(); render();
+  }
+}
+
+function setConexao(txt) {
+  const el = $('#conexao');
+  if (txt) { el.textContent = txt; el.classList.remove('off'); return; }
+  if (!API_OK) { el.textContent = ''; return; }
+  if (st.offline) {
+    el.textContent = st.ultima ? 'Sem conexão com a planilha. Dados de ' + horaAgora(st.ultima) + '.' : 'Sem conexão com a planilha.';
+    el.classList.add('off');
+  } else if (st.ultima) {
+    el.textContent = 'Atualizado às ' + horaAgora(st.ultima);
+    el.classList.remove('off');
+  }
+}
+
+function upsert(r) {
+  if (!r) return;
+  const i = st.remessas.findIndex(x => x.id === r.id);
+  if (i >= 0) st.remessas[i] = r; else st.remessas.unshift(r);
+  lsSet(K_CACHE, { remessas: st.remessas, produtos: PRODUTOS, em: (st.ultima || new Date()).toISOString() });
+  render();
+}
+
+/* ---------- renderização ---------- */
+function filtradasPorPlat() { return st.remessas.filter(r => st.plat === 'todas' || r.plataforma === st.plat); }
+
+function render() {
+  $('#avisoConfig').hidden = API_OK;
+  const base = filtradasPorPlat();
+
+  // Pipeline
+  $('#pipe').innerHTML = ETAPAS.map((e, i) => {
+    const n = base.filter(r => r.status === e.k).length;
+    return `<li class="${st.status === e.k ? 'sel' : ''}"><button type="button" data-etapa="${e.k}" aria-pressed="${st.status === e.k}">
+      <span class="num">${i + 1}</span><span class="nome">${e.nome}</span><span class="cont">${n}</span></button></li>`;
+  }).join('');
+  const etSel = ETAPAS.find(e => e.k === st.status);
+  $('#pipeHint').innerHTML = etSel ? esc(etSel.dica) + ' <button type="button" class="btn-link" data-limpar>Mostrar todas</button>' : '';
+
+  // Em andamento
+  const mostrarAbertas = st.status !== 'coletado';
+  $('#tituloAbertas').hidden = !mostrarAbertas;
+  $('#tituloAbertas').nextElementSibling.hidden = !mostrarAbertas;
+  $('#listaAbertas').hidden = !mostrarAbertas;
+  if (mostrarAbertas) {
+    const abertas = base.filter(r => ORDEM[r.status] >= 0 && ORDEM[r.status] < 3 && (!st.status || r.status === st.status))
+      .sort((a, b) => a.dataColeta.localeCompare(b.dataColeta));
+    $('#listaAbertas').innerHTML = abertas.length ? abertas.map(card).join('') : vazio();
+  }
+
+  // Encerradas
+  const fech = base.filter(r => r.status === 'coletado' || r.status === 'cancelado')
+    .filter(r => st.status === 'coletado' ? r.status === 'coletado' : true)
+    .sort((a, b) => String(b.coletadoEm || b.canceladoEm).localeCompare(String(a.coletadoEm || a.canceladoEm)));
+  const box = $('#boxFechadas');
+  box.hidden = !!st.status && st.status !== 'coletado';
+  if (st.status === 'coletado') box.open = true;
+  $('#nFechadas').textContent = fech.length;
+  $('#listaFechadas').innerHTML = fech.length ? fech.map(card).join('') : '<div class="vazio">Nenhuma remessa encerrada ainda.</div>';
+}
+
+function vazio() {
+  if (!API_OK) return '<div class="vazio">A lista aparece aqui assim que a página estiver ligada à planilha.</div>';
+  if (st.status) return '<div class="vazio">Nenhuma remessa nesta etapa.</div>';
+  return `<div class="vazio">Nenhuma remessa em andamento.${MODO === 'admin' ? '<br><button type="button" class="btn-red" data-acao="nova">+ Nova remessa</button>' : ''}</div>`;
+}
+
+function quandoTag(r) {
+  if (r.status === 'coletado' || r.status === 'cancelado' || !r.dataColeta) return '';
+  const n = diasAte(r.dataColeta);
+  if (n < 0) return `<span class="quando atraso">atrasada ${plural(-n, 'dia', 'dias')}</span>`;
+  if (n === 0) return '<span class="quando hoje">hoje</span>';
+  if (n === 1) return '<span class="quando amanha">amanhã</span>';
+  return `<span class="quando">em ${n} dias</span>`;
+}
+
+function chipsDocs(links, rotulo, obrigatorio) {
+  const l = String(links || '').split('\n').filter(Boolean);
+  if (!l.length) return obrigatorio ? `<span class="doc falta">${rotulo} pendente</span>` : '';
+  return l.map((u, i) => `<a class="doc" href="${esc(u)}" target="_blank" rel="noopener">📄 ${rotulo}${l.length > 1 ? ' ' + (i + 1) : ''}</a>`).join('');
+}
+
+function card(r) {
+  const p = PLAT[r.plataforma] || PLAT.ML;
+  const idx = ORDEM[r.status];
+  const mini = [0, 1, 2, 3].map(i => `<i class="${idx >= i ? 'on' : ''}"></i>`).join('');
+  const itens = (r.itens || []).map(i => `<tr><td>${esc(i.produto)}</td><td>${i.quantidade}</td></tr>`).join('');
+  const posPronto = idx >= 1 || (r.status === 'cancelado' && r.volumes);
+  const hist = [
+    r.criadoEm && 'Criada ' + dataHoraBR(r.criadoEm),
+    r.prontoEm && 'Pronta ' + dataHoraBR(r.prontoEm),
+    r.documentadoEm && 'Docs ' + dataHoraBR(r.documentadoEm),
+    r.coletadoEm && 'Coletada ' + dataHoraBR(r.coletadoEm),
+    r.canceladoEm && 'Cancelada ' + dataHoraBR(r.canceladoEm)
+  ].filter(Boolean).map(esc).join('</span><span>');
+
+  return `<article class="rem ${p.cls} ${r.status}">
+    <div class="rem-top">
+      <div><span class="rem-id">${esc(r.id)}</span><span class="tag-plat ${p.cls}">${p.nome}</span></div>
+      <span class="st ${r.status}">${NOME_STATUS[r.status]}</span>
+    </div>
+    <div class="coleta"><b>Coleta:</b> ${diaSemana(r.dataColeta)}, ${dataBR(r.dataColeta)} ${quandoTag(r)}</div>
+    <div class="mini" aria-hidden="true">${mini}</div>
+    <table class="itens"><tbody>${itens}<tr class="tot"><td><b>Total</b></td><td>${r.totalTapes} tapes</td></tr></tbody></table>
+    <div class="vol"><span>Volumes: <b>${r.volumes != null ? r.volumes : '—'}</b></span></div>
+    <div class="docs">
+      ${chipsDocs(r.linkAsn, 'ASN', true)}
+      ${chipsDocs(r.linkNf, 'NF', posPronto && r.status !== 'cancelado')}
+      ${chipsDocs(r.linkEtiquetas, 'Etiquetas volumes', posPronto && r.status !== 'cancelado')}
+      ${r.pasta ? `<a class="doc" href="${esc(r.pasta)}" target="_blank" rel="noopener">📁 Pasta</a>` : ''}
+    </div>
+    ${r.observacao ? `<div class="obs">${esc(r.observacao)}</div>` : ''}
+    ${r.status === 'cancelado' && r.motivoCancelamento ? `<div class="obs"><b>Motivo:</b> ${esc(r.motivoCancelamento)}</div>` : ''}
+    <div class="hist"><span>${hist}</span></div>
+    ${acoes(r)}
+  </article>`;
+}
+
+function acoes(r) {
+  const id = esc(r.id), adm = MODO === 'admin';
+  const b = [];
+  if (r.status === 'aguardando') b.push(`<button type="button" class="btn-red" data-acao="volumes" data-id="${id}">Informar volumes</button>`);
+  if (r.status === 'pronto') {
+    if (adm) b.push(`<button type="button" class="btn-red" data-acao="documentos" data-id="${id}">Anexar NF e etiquetas</button>`);
+    else b.push('<span class="espera">Aguardando NF e etiquetas do administrativo</span>');
+    b.push(`<button type="button" class="btn-link" data-acao="volumes" data-id="${id}">Corrigir volumes</button>`);
+  }
+  if (r.status === 'documentado') {
+    b.push(`<button type="button" class="btn-red" data-acao="coleta" data-id="${id}">Confirmar coleta</button>`);
+    if (adm) b.push(`<button type="button" class="btn-link" data-acao="documentos" data-id="${id}">Adicionar arquivos</button>`);
+  }
+  if (adm && ORDEM[r.status] >= 0 && ORDEM[r.status] < 3) b.push(`<button type="button" class="btn-link" data-acao="cancelar" data-id="${id}">Cancelar remessa</button>`);
+  return b.length ? `<div class="acoes">${b.join('')}</div>` : '';
+}
+
+/* ---------- modais ---------- */
+const dlg = $('#dlg');
+function abrir(html) { $('#dlgIn').innerHTML = html; if (!dlg.open) dlg.showModal(); const f = dlg.querySelector('input:not([type=file]),textarea'); if (f) setTimeout(() => f.focus(), 30); }
+function fechar() { if (st.ocupado) return; dlg.close(); }
+dlg.addEventListener('cancel', e => { if (st.ocupado) e.preventDefault(); });
+dlg.addEventListener('click', e => { if (e.target === dlg) fechar(); if (e.target.closest('[data-fechar]')) fechar(); });
+function erroModal(msg) { const e = $('#dlgErro'); if (!e) return toast(msg, true); e.textContent = msg; e.hidden = !msg; if (msg) e.scrollIntoView({ block: 'nearest' }); }
+const achar = id => st.remessas.find(r => r.id === id);
+const rodapeModal = (txt) => `<div class="erro" id="dlgErro" hidden></div>
+  <div class="dlg-acoes"><button type="button" class="btn-sec" data-fechar>Voltar</button><button type="button" class="btn-red" id="dlgOk">${txt}</button></div>`;
+const resumo = r => `<div class="resumo"><b>${esc(r.id)}</b> – ${PLAT[r.plataforma].nome}<br>${r.totalTapes} tapes, coleta ${diaSemana(r.dataColeta)} ${dataBR(r.dataColeta)}${r.volumes != null ? ', ' + plural(r.volumes, 'volume', 'volumes') : ''}</div>`;
+
+async function executar(textoBotao, fn) {
+  const ok = $('#dlgOk'); const txt = ok.textContent;
+  erroModal('');
+  st.ocupado = true;
+  dlg.querySelectorAll('button,input,textarea').forEach(el => el.disabled = true);
+  ok.textContent = textoBotao;
+  try {
+    await fn();
+    st.ocupado = false; dlg.close();
+    carregar(true);
+  } catch (e) {
+    st.ocupado = false;
+    dlg.querySelectorAll('button,input,textarea').forEach(el => el.disabled = false);
+    ok.textContent = txt;
+    erroModal(e.message || String(e));
+  }
+}
+
+function checarArquivos(inputs) {
+  let total = 0; const todos = [];
+  inputs.forEach(inp => [...(inp.files || [])].forEach(f => {
+    if (f.size > MAX_MB * 1048576) throw new Error(`"${f.name}" tem ${(f.size / 1048576).toFixed(1)} MB. O limite é ${MAX_MB} MB por arquivo.`);
+    if (!f.size) throw new Error(`"${f.name}" está vazio.`);
+    total += f.size; todos.push(f);
+  }));
+  if (total > MAX_TOTAL_MB * 1048576) throw new Error(`Os arquivos somam ${(total / 1048576).toFixed(1)} MB. Envie no máximo ${MAX_TOTAL_MB} MB por vez.`);
+  return todos;
+}
+function paraBase64(f) {
+  return new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onload = () => res({ nome: f.name, tipo: f.type || 'application/octet-stream', base64: String(fr.result).split(',')[1] || '' });
+    fr.onerror = () => rej(new Error('Não foi possível ler o arquivo ' + f.name));
+    fr.readAsDataURL(f);
+  });
+}
+const lerTodos = inp => Promise.all([...(inp.files || [])].map(paraBase64));
+
+/* Nova remessa */
+function modalNova() {
+  const r = lsGet(K_RASC) || {};
+  const plat = r.plataforma || (st.plat !== 'todas' ? st.plat : '');
+  const chave = novaChave();
+  abrir(`<h3>Nova remessa FULL</h3>
+    <p class="dlg-sub">Ao criar, o estoque recebe o aviso no Discord para separar.</p>
+    <div class="campo"><span class="lbl">Plataforma</span>
+      <div class="plat-pick">
+        <button type="button" class="pp ml ${plat === 'ML' ? 'on' : ''}" data-p="ML" aria-pressed="${plat === 'ML'}">Mercado Livre</button>
+        <button type="button" class="pp shp ${plat === 'SHOPEE' ? 'on' : ''}" data-p="SHOPEE" aria-pressed="${plat === 'SHOPEE'}">Shopee</button>
+      </div></div>
+    <div class="campo"><span class="lbl">Quantidade de tapes</span>
+      <div class="qtds">${PRODUTOS.map(p => `<label class="qtd"><span>${esc(p)}</span>
+        <input type="number" inputmode="numeric" min="0" step="1" placeholder="0" data-prod="${esc(p)}" value="${esc((r.qtd || {})[p] || '')}"></label>`).join('')}</div>
+      <div class="total">Total: <b id="nvTotal">0</b> tapes</div></div>
+    <div class="campo"><label for="nvData">Data da coleta</label><input type="date" id="nvData" min="${hojeISO()}" value="${esc(r.data || '')}"></div>
+    <div class="campo"><label for="nvAsn">Arquivo de etiquetas (ASN)</label><input type="file" id="nvAsn" multiple>
+      <small>Até ${MAX_MB} MB por arquivo. Os campos acima ficam salvos neste aparelho se a página recarregar; o arquivo precisa ser escolhido de novo.</small></div>
+    <div class="campo"><label for="nvObs">Observação <span class="opc">(opcional)</span></label><textarea id="nvObs" rows="2" maxlength="500">${esc(r.obs || '')}</textarea></div>
+    ${rodapeModal('Criar remessa')}`);
+
+  let platSel = plat;
+  const inputs = [...dlg.querySelectorAll('[data-prod]')];
+  const salvar = () => {
+    const qtd = {}; inputs.forEach(i => { if (i.value !== '') qtd[i.dataset.prod] = i.value; });
+    lsSet(K_RASC, { plataforma: platSel, qtd, data: $('#nvData').value, obs: $('#nvObs').value });
+    $('#nvTotal').textContent = inputs.reduce((s, i) => s + (parseInt(i.value, 10) > 0 ? parseInt(i.value, 10) : 0), 0);
+  };
+  salvar();
+  dlg.querySelectorAll('.pp').forEach(b => b.onclick = () => {
+    platSel = b.dataset.p;
+    dlg.querySelectorAll('.pp').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', x === b); });
+    salvar();
+  });
+  dlg.querySelectorAll('input:not([type=file]),textarea').forEach(el => el.addEventListener('input', salvar));
+
+  $('#dlgOk').onclick = () => {
+    try {
+      if (!platSel) throw new Error('Escolha a plataforma.');
+      const itens = [];
+      for (const i of inputs) {
+        if (i.value === '') continue;
+        const n = Number(i.value);
+        if (!Number.isInteger(n) || n < 0) throw new Error(`Quantidade inválida em ${i.dataset.prod}. Use só números inteiros.`);
+        if (n > 20000) throw new Error(`${n} unidades de ${i.dataset.prod} parece alto demais. Confira o número.`);
+        if (n > 0) itens.push({ produto: i.dataset.prod, quantidade: n });
+      }
+      if (!itens.length) throw new Error('Informe a quantidade de pelo menos um produto.');
+      const data = $('#nvData').value;
+      if (!data) throw new Error('Informe a data da coleta.');
+      if (data < hojeISO()) throw new Error('A data da coleta não pode ser no passado.');
+      const asn = $('#nvAsn');
+      if (!asn.files.length) throw new Error('Anexe o arquivo de etiquetas (ASN).');
+      checarArquivos([asn]);
+      executar('Enviando…', async () => {
+        const arquivosAsn = await lerTodos(asn);
+        const d = await apiPost({ acao: 'criar', chave, plataforma: platSel, itens, dataColeta: data, observacao: $('#nvObs').value.trim(), arquivosAsn }, 3);
+        lsDel(K_RASC);
+        upsert(d.remessa);
+        toast(`Remessa ${d.remessa.id} criada. Estoque avisado no Discord.`);
+      });
+    } catch (e) { erroModal(e.message); }
+  };
+}
+
+/* Volumes */
+function modalVolumes(r) {
+  const correcao = r.status === 'pronto';
+  abrir(`<h3>${correcao ? 'Corrigir volumes' : 'Informar volumes'}</h3>
+    <p class="dlg-sub">${correcao ? 'O administrativo recebe o aviso da correção.' : 'Ao salvar, a remessa fica pronta e o administrativo é avisado no Discord.'}</p>
+    ${resumo(r)}
+    <div class="campo"><label for="volN">Quantidade de volumes (caixas)</label>
+      <div class="stepper"><button type="button" data-d="-1" aria-label="Menos um">−</button>
+      <input type="number" id="volN" inputmode="numeric" min="1" max="500" step="1" value="${r.volumes != null ? r.volumes : ''}" placeholder="0">
+      <button type="button" data-d="1" aria-label="Mais um">+</button></div></div>
+    ${rodapeModal(correcao ? 'Salvar correção' : 'Marcar como pronta')}`);
+  const inp = $('#volN');
+  dlg.querySelectorAll('.stepper [data-d]').forEach(b => b.onclick = () => {
+    const v = Math.max(1, Math.min(500, (parseInt(inp.value, 10) || 0) + Number(b.dataset.d))); inp.value = v;
+  });
+  $('#dlgOk').onclick = () => {
+    const n = Number(inp.value);
+    if (!Number.isInteger(n) || n < 1) return erroModal('Informe a quantidade de volumes (número inteiro, mínimo 1).');
+    if (n > 500) return erroModal('Mais de 500 volumes parece errado. Confira o número.');
+    if (n > r.totalTapes) return erroModal(`São ${r.totalTapes} tapes e ${n} volumes: mais caixas do que tapes. Confira o número.`);
+    executar('Salvando…', async () => {
+      const d = await apiPost({ acao: 'volumes', id: r.id, volumes: n });
+      upsert(d.remessa);
+      toast(correcao ? `Volumes de ${r.id} corrigidos para ${n}.` : `${r.id} pronta com ${plural(n, 'volume', 'volumes')}. Aviso enviado.`);
+    });
+  };
+}
+
+/* Documentos */
+function modalDocumentos(r) {
+  const primeira = r.status === 'pronto';
+  abrir(`<h3>${primeira ? 'Anexar NF e etiquetas' : 'Adicionar arquivos'}</h3>
+    <p class="dlg-sub">${primeira ? 'Com os dois anexos, a remessa fica liberada para coleta e o estoque é avisado.' : 'Os novos arquivos se somam aos que já estão na remessa.'}</p>
+    ${resumo(r)}
+    <div class="campo"><label for="docNf">Nota fiscal <span class="opc">(PDF e/ou XML)</span></label><input type="file" id="docNf" multiple></div>
+    <div class="campo"><label for="docEtq">Etiquetas dos volumes</label><input type="file" id="docEtq" multiple>
+      <small>Até ${MAX_MB} MB por arquivo e ${MAX_TOTAL_MB} MB no total.</small></div>
+    ${rodapeModal(primeira ? 'Anexar e liberar coleta' : 'Adicionar arquivos')}`);
+  $('#dlgOk').onclick = () => {
+    const nf = $('#docNf'), etq = $('#docEtq');
+    try {
+      if (primeira && !nf.files.length) throw new Error('Anexe a nota fiscal.');
+      if (primeira && !etq.files.length) throw new Error('Anexe as etiquetas dos volumes.');
+      if (!nf.files.length && !etq.files.length) throw new Error('Escolha pelo menos um arquivo.');
+      checarArquivos([nf, etq]);
+    } catch (e) { return erroModal(e.message); }
+    executar('Enviando arquivos…', async () => {
+      const [arquivosNf, arquivosEtiquetas] = await Promise.all([lerTodos(nf), lerTodos(etq)]);
+      const d = await apiPost({ acao: 'documentos', id: r.id, arquivosNf, arquivosEtiquetas });
+      upsert(d.remessa);
+      toast(primeira ? `${r.id} com documentação completa. Estoque avisado.` : `Arquivos adicionados a ${r.id}.`);
+    });
+  };
+}
+
+/* Coleta */
+function modalColeta(r) {
+  abrir(`<h3>Confirmar coleta</h3>
+    <p class="dlg-sub">Use quando a transportadora levar os volumes.</p>
+    ${resumo(r)}
+    ${rodapeModal('Confirmar coleta')}`);
+  $('#dlgOk').onclick = () => executar('Salvando…', async () => {
+    const d = await apiPost({ acao: 'coletado', id: r.id });
+    upsert(d.remessa);
+    toast(`${r.id} marcada como coletada.`);
+  });
+}
+
+/* Cancelar */
+function modalCancelar(r) {
+  abrir(`<h3>Cancelar remessa</h3>
+    <p class="dlg-sub">A remessa sai da lista em andamento e o estoque é avisado. Os arquivos continuam na pasta do Drive.</p>
+    ${resumo(r)}
+    <div class="campo"><label for="canMot">Motivo</label><textarea id="canMot" rows="3" maxlength="500" placeholder="Ex.: coleta remarcada pelo Mercado Livre, será criada nova remessa"></textarea></div>
+    ${rodapeModal('Cancelar remessa')}`);
+  $('#dlgOk').onclick = () => {
+    const m = $('#canMot').value.trim();
+    if (m.length < 5) return erroModal('Escreva o motivo do cancelamento.');
+    executar('Salvando…', async () => {
+      const d = await apiPost({ acao: 'cancelar', id: r.id, motivo: m });
+      upsert(d.remessa);
+      toast(`${r.id} cancelada.`);
+    });
+  };
+}
+
+/* ---------- eventos ---------- */
+document.addEventListener('click', e => {
+  const segBtn = e.target.closest('.seg [data-plat]');
+  if (segBtn) {
+    st.plat = segBtn.dataset.plat;
+    document.querySelectorAll('.seg [data-plat]').forEach(b => b.classList.toggle('on', b === segBtn));
+    render(); return;
+  }
+  const et = e.target.closest('[data-etapa]');
+  if (et) { st.status = st.status === et.dataset.etapa ? null : et.dataset.etapa; render(); return; }
+  if (e.target.closest('[data-limpar]')) { st.status = null; render(); return; }
+
+  const a = e.target.closest('[data-acao]');
+  if (!a || dlg.contains(a)) return;
+  if (!API_OK) return toast('Ligue a página à planilha primeiro (API_URL).', true);
+  const acao = a.dataset.acao;
+  if (acao === 'nova') return modalNova();
+  const r = achar(a.dataset.id); if (!r) return;
+  if (acao === 'volumes') modalVolumes(r);
+  if (acao === 'documentos') modalDocumentos(r);
+  if (acao === 'coleta') modalColeta(r);
+  if (acao === 'cancelar') modalCancelar(r);
+});
+$('#btnNova').addEventListener('click', () => { if (!API_OK) return toast('Ligue a página à planilha primeiro (API_URL).', true); modalNova(); });
+$('#btnAtualizar').addEventListener('click', () => carregar());
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && !dlg.open) carregar(true); });
+setInterval(() => { if (document.visibilityState === 'visible' && !dlg.open) carregar(true); }, 60000);
+
+/* ---------- início ---------- */
+(function init() {
+  if (MODO === 'estoque') {
+    $('#btnNova').hidden = true;
+    $('#modoEst').hidden = false;
+    $('#heroSub').textContent = 'Separe as remessas e informe a quantidade de volumes quando terminar';
+  }
+  $('#versao').innerHTML = `Versão ${VERSAO} – modificado em ${MODIFICADO}` +
+    (MODO === 'admin' ? ` <br><a href="?modo=estoque">Abrir tela do estoque</a> · <button type="button" class="btn-link" id="btnTesteAviso" style="font-size:12px;padding:0">Testar aviso do Discord</button>` : ` <br><a href="${location.pathname}">Tela do administrativo</a>`);
+  const bt = $('#btnTesteAviso'); if (bt) bt.addEventListener('click', () => testarAviso(bt));
+  const c = lsGet(K_CACHE);
+  if (c && Array.isArray(c.remessas)) {
+    st.remessas = c.remessas;
+    if (Array.isArray(c.produtos) && c.produtos.length) PRODUTOS = c.produtos;
+    st.ultima = c.em ? new Date(c.em) : null;
+  }
+  render();
+  carregar();
+})();
+</script>
+</body>
+</html>
